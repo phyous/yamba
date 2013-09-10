@@ -17,12 +17,14 @@
         android:text="@string/status_label" />
 
     <TextView
+            android:id="@+id/status_char_count_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
             android:text="@string/max_characters" />
 
     <EditText
+            android:id="@+id/status_edit_text"
             android:layout_width="fill_parent"
             android:layout_height="0dp"
             android:gravity="bottom"
@@ -32,6 +34,7 @@
             />
 
     <Button
+            android:id="@+id/status_submit_button"
             android:layout_weight="2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

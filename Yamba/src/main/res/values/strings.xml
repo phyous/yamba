@@ -7,6 +7,6 @@
     <string name="max_characters">140</string>
     <string name="submit_button">Submit</string>
     <string name="status_label">Status</string>
-    <string name="status_input_initial">Enter your status ...</string>
+    <string name="status_input_initial">Enter your status …</string>
 
 </resources>
