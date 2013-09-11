@@ -14,6 +14,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.twitter.android.yamba.service.YambaService;
+
 import com.marakana.android.yamba.clientlib.YambaClient;
 import com.marakana.android.yamba.clientlib.YambaClientException;
 
@@ -71,7 +73,12 @@ public class StatusActivity extends Activity {
         mStatusSubmitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                post();
+                //post();
+                String status = mStatusEditText.getText().toString();
+                if(checkValidPost(status)){
+                    mLastPost = status;
+                    YambaService.post(getApplicationContext(), status);
+                }
             }
         });
     }
