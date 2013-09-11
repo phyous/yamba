@@ -8,5 +8,7 @@
     <string name="submit_button">Submit</string>
     <string name="status_label">Status</string>
     <string name="status_input_initial">Enter your status …</string>
+    <string name="submit_success_msg">Messsage posted!</string>
+    <string name="submit_failed_msg">Submit failed ...</string>
 
 </resources>

@@ -1,7 +1,7 @@
 package com.twitter.android.yamba;
 
 import android.content.res.Resources;
-import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
 import android.text.Editable;
@@ -12,14 +12,44 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.marakana.android.yamba.clientlib.YambaClient;
+import com.marakana.android.yamba.clientlib.YambaClientException;
 
 public class StatusActivity extends Activity {
     private final String TAG = StatusActivity.class.getName();
     private EditText mStatusEditText;
     private TextView mStatusCharCount;
     private Button mStatusSubmitButton;
+    private volatile YambaClient client = new YambaClient("student", "password");
 
     private static boolean mStatusCleared = false;
+    private static String mLastPost = "";
+
+    class Poster extends AsyncTask<String, Void, Integer> {
+        private final String TAG = this.getClass().getName();
+
+        @Override
+        protected Integer doInBackground(String... params) {
+            String postStatus = params[0];
+            if (BuildConfig.DEBUG) {Log.d(TAG, "posting: " + postStatus);}
+
+            int msg = R.string.submit_failed_msg;
+            try {
+                client.postStatus(postStatus);
+                msg = R.string.submit_success_msg;
+            } catch (YambaClientException e) {
+                e.printStackTrace();
+            }
+            return Integer.valueOf(msg);
+        }
+
+        @Override
+        protected void onPostExecute(Integer result) {
+            Toast.makeText(StatusActivity.this, result.intValue(), Toast.LENGTH_SHORT).show();
+        }
+    }
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,7 +64,31 @@ public class StatusActivity extends Activity {
 
         setTextCountListener();
         setTextClearListener();
+        setSubmitButtonListener();
     }
+
+    private void setSubmitButtonListener() {
+        mStatusSubmitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                post();
+            }
+        });
+    }
+
+    private void post() {
+        String status = mStatusEditText.getText().toString();
+        if(checkValidPost(status)){
+            mLastPost = status;
+            new Poster().execute(status);
+        }
+    }
+
+    private boolean checkValidPost(String newStatus) {
+        if(!mLastPost.equals(newStatus)) return true;
+        else return false;
+    }
+
 
     /**
      * Clears the text in the status text input box when user clicks.
